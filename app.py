@@ -3,11 +3,16 @@ from transformers import pipeline
 import requests, datetime
 import serpapi
 import json
+from transformers import pipeline
+import torch
 app = Flask(__name__)
 
-sentiment_analyzer = pipeline("sentiment-analysis", model="ProsusAI/finbert")
 
-summarizer = pipeline("summarization", model="facebook/bart-large-cnn", max_length=300, min_length=30)
+device = 0 if torch.cuda.is_available() else -1
+
+sentiment_analyzer = pipeline("sentiment-analysis", model="ProsusAI/finbert", device = device)
+
+summarizer = pipeline("summarization", model="facebook/bart-large-cnn", max_length=300, min_length=30, device = device)
 
 
 with open('/Users/jainamshah/PycharmProjects/Financial sentiment analyzer/keys.json', 'r') as file:
@@ -135,4 +140,4 @@ def analyze_stock():
 
 
 if __name__ == "__main__":
-    app.run(port = 5001, debug=True)
+    app.run(port = 5002, debug=True)
